@@ -1,0 +1,124 @@
+# ALARO-SURFEX daily Simulation
+
+This repository contains scripts for running ALARO-SURFEX simulations using a PBS job scheduler.
+
+## Files
+
+- `alaro_surfex_job.sh`: The main PBS job script that integrates the functionality of the original scripts and runs the ALARO-SURFEX simulations.
+- `config.sh`: The configuration file that sets up the necessary paths, executables, environments, namelists, and other variables used in the job script.
+
+## Configuration
+
+The `config.sh` file contains all the necessary configurations for the job script. It sets up the following variables:
+
+- Directories: `COUPLING`, `WORKDIR`, `LBCDIR`, `OUTPUTDIR`, `ERADIR`, `DATADIR_ECOCLIMAP`, `DATADIR_RRTM`
+- Executables and environments: `DECDATE`, `FAREPLACE`, `MASTER`, `ENV`, `ENVFAREP`
+- Namelists and other files: `NAM927`, `NAM927_SFX`, `NAM927_LVL`, `NAM001`, `NAMSFX`, `NAMFAREP`, `NAMFAREPSFX`, `CLIM_LBC`, `CLIM_TRG`, `PGDFILE`
+- Other variables: `REMOTE`, `EXP`, `LEVELS`, `RUNSTARTHH`
+- Forecast settings: `NPROCA`, `NPROCB`, `NPROC`, `OMP_NUM_THREADS`, `TIMESTEP`
+
+Modify the `config.sh` file according to your environment and requirements before running the job script.
+
+## Usage
+
+1. Ensure that the necessary modules and dependencies are loaded in the job script or in the `config.sh` file.
+2. Adjust the PBS directives in the job script (`alaro_surfex_job.sh`) according to your job scheduler and resource requirements.
+3. Submit the job script using the following command:
+
+   ```bash
+   qsub alaro_surfex_job.sh INIDATE STARTDATE STOPDATE
+
+
+Replace INIDATE, STARTDATE, and STOPDATE with the appropriate values.
+
+The job script will run the ALARO-SURFEX simulations for the specified date range, performing the necessary steps such as data retrieval, preprocessing, model execution, and postprocessing.
+
+
+
+# MORE DETAILED CONFIG OPTIONS
+
+# ALARO-SURFEX Simulation Configuration
+
+This file contains the configuration options for running ALARO-SURFEX simulations.
+
+## Directories
+
+- `COUPLING`: The directory containing the coupling files.
+  - Default: "/mnt/HDS_CLIMAVIN/CLIMAVIN/LBC_CORDEX_AFR_ERA5_michielv/"
+- `WORKDIR`: The working directory for the simulations.
+  - Default: "/scratch-b/kvwever/ALARO1_SFX8_ERA5_4KM_FArep_ETH"
+- `LBCDIR`: The directory for storing the lateral boundary condition (LBC) files.
+  - Default: "/scratch-b/kvwever/LBC_ETH/"
+- `OUTPUTDIR`: The directory for storing the output files.
+  - Default: "/mnt/HDS_CLIMATE/CLIMATE/kvwever/ETHIOPIA/"
+- `ERADIR`: The directory where the main scripts and namelists are located.
+  - Default: "/home/kvwever/ETHIOPIA/"
+- `DATADIR_ECOCLIMAP`: The directory containing the ECOCLIMAP data.
+  - Default: "/mnt/HDS_ALD_TEAM/ALD_TEAM/hamdi/ALARO1-SURFEX8/ECOCLIMAP"
+- `DATADIR_RRTM`: The directory containing the RRTM data.
+  - Default: "/mnt/HDS_ALD_TEAM/ALD_TEAM/hamdi/ALARO1-SURFEX8/RRTM"
+
+## Executables and Environments
+
+- `DECDATE`: The path to the `decdate` executable.
+  - Default: "/home/hamdi/bin/decdate"
+- `FAREPLACE`: The path to the `FAREPLACE` executable.
+  - Default: "/home/hamdi/aladin/pack/cy36/bin"
+- `MASTER`: The path to the `MASTERODB` executable.
+  - Default: "/home/hamdi/aladin/pack/test/bin/MASTERODB"
+- `ENV`: The path to the ALADIN environment file.
+  - Default: "$ERADIR/scr/ENV_ALADIN_CY43T2NEW"
+- `ENVFAREP`: The path to the FAreplace environment file.
+  - Default: "/home/daand/aladin/runs/ref38t1/ENV_ALADIN"
+
+## Namelists and Other Files
+
+- `NAM927`: The path to the `name.e927` namelist file.
+  - Default: "$ERADIR/namelist/name.e927"
+- `NAM927_SFX`: The path to the `name.e927.sfx` namelist file.
+  - Default: "$ERADIR/namelist/name.e927.sfx"
+- `NAM927_LVL`: The path to the `ERA5a_46l` namelist file.
+  - Default: "$ERADIR/namelist/ERA5a_46l"
+- `NAM001`: The path to the `name.e001.CY43T2new.sfx.emnet` namelist file.
+  - Default: "$ERADIR/namelist/name.e001.CY43T2new.sfx.emnet"
+- `NAMSFX`: The path to the `EXSEG1.nam.plus.emnet` namelist file.
+  - Default: "$ERADIR/namelist/EXSEG1.nam.plus.emnet"
+- `NAMFAREP`: The path to the `HIST_namelist_name.FAreplace_emnet` namelist file.
+  - Default: "$ERADIR/namelist/HIST_namelist_name.FAreplace_emnet"
+- `NAMFAREPSFX`: The path to the `HIST_namelist_name.FAreplace_emnet.sfx` namelist file.
+  - Default: "$ERADIR/namelist/HIST_namelist_name.FAreplace_emnet.sfx"
+- `CLIM_LBC`: The path to the LBC climate files.
+  - Default: "/scratch-b/kvwever/CLIM923_AFR/clim_model_m"
+- `CLIM_TRG`: The path to the target climate files.
+  - Default: "/home/kvwever/ALARO_SURFEX_PGD/ETH/STEP_2/clim_4km_ETH_m"
+- `PGDFILE`: The path to the PGD file.
+  - Default: "/home/kvwever/ALARO_SURFEX_PGD/ETH/STEP_3/PGD_4km_ETH.fa"
+
+## Other Variables
+
+- `REMOTE`: The remote host for file transfers.
+  - Default: "nori"
+- `EXP`: The experiment name.
+  - Default: "ABOF"
+- `LEVELS`: The vertical levels for the simulations.
+  - Default: "$(echo $(seq -f %2g, 1 1 46))"
+- `RUNSTARTHH`: The starting hour for the simulations.
+  - Default: "00"
+
+## Forecast Settings
+
+- `NPROCA`: The number of MPI tasks in the first dimension.
+  - Default: 6
+- `NPROCB`: The number of MPI tasks in the second dimension.
+  - Default: 24
+- `NPROC`: The total number of MPI tasks (computed as NPROCA * NPROCB).
+- `OMP_NUM_THREADS`: The number of OpenMP threads per MPI task.
+  - Default: 1
+- `TIMESTEP`: The timestep for the simulations.
+  - Default: 120
+
+Please ensure that the paths and settings in this configuration file match your specific environment and requirements. Modify the values accordingly before running the ALARO-SURFEX simulations.
+
+
+FOR MORE INFORMATION PLEASE CONTACT ME AT debasish.mahapatra@ugent.be
+

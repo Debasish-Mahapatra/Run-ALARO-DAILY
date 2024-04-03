@@ -1,0 +1,29 @@
+# Memory settings
+ulimit -s unlimited
+ulimit -c unlimited
+
+# Load modules
+. ${MODULESHOME}/init/bash
+module purge
+module load aladin/2018a
+
+# settings from SGI benchmark report
+export KMP_AFFINITY=disabled
+export KMP_STACKSIZE=1g
+
+# Drhook settings
+export DR_HOOK=1
+export DR_HOOK_IGNORE_SIGNALS=-1
+##export DR_HOOK_SILENT=1
+export DR_HOOK_OPT=prof
+export decfort_dump_flag=Y
+
+# Avoid XPMEM
+export MPI_MEMMAP_OFF=true
+export MPI_XPMEM_ENABLED=false
+
+#
+export MP_SHARED_MEMORY=no
+export DR_HOOK_NOT_MPI=""
+
+
