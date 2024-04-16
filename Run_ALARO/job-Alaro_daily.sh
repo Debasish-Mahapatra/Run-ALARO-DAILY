@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N ALARO_SURFEX
-#PBS -q queue_name
-#PBS -l walltime=24:00:00
+#PBS -q short
+#PBS -l walltime=3:00:00
 #PBS -l select=6:ncpus=24:mpiprocs=24:ompthreads=1:mem=240gb
 #PBS -joe
 #PBS -o /path/to/output/directory/ALARO_SURFEX.out
@@ -181,42 +181,10 @@ function get_coupling {
   rm -f BC*
 }
 
-function farcreplace {
-  set -x
-  
-  module purge
-  source $ENVFAREP
-  
-  echo 'entering ALARO FAreplace'
-  mkdir -p FArep
-  cp ELSCF${EXP}ALBC000 FArep/newfields
-  cp ${WORKDIR}/${RSTART}/${PREVYYYY}${PREVMM}${PREVDD}/ICMSH${EXP}+00${PREVHOURRANGE} FArep/original
-  cd FArep
-  cp ${NAMFAREP} fort.4
-  R --vanilla < ${FAREPLACE_R}
-  cd ..
-  mv FArep/original ICMSH${EXP}INIT
-  rm -r FArep
-  rm ${WORKDIR}/${RSTART}/${PREVYYYY}${PREVMM}${PREVDD}/ICMSH${EXP}+00${PREVHOURRANGE}
-  
-  echo 'entering SURFEX FAreplace'
-  mkdir -p FArep2
-  cp ELSCF${EXP}ALBC000 FArep2/indterremer
-  cp ICMSH${EXP}INIT.sfx FArep2/newfields
-  cp ${WORKDIR}/${RSTART}/${PREVYYYY}${PREVMM}${PREVDD}/ICMSH${EXP}+00${PREVHOURRANGE}.sfx FArep2/original
-  cd FArep2
-  cp ${NAMFAREPSFX} fort.4
-  R --vanilla < ${FAREPLACE_R_SFX}
-  cd ..
-  mv FArep2/original ICMSH${EXP}INIT.sfx
-  rm -r FArep2
-  rm ${WORKDIR}/${RSTART}/${PREVYYYY}${PREVMM}${PREVDD}/ICMSH${EXP}+00${PREVHOURRANGE}.sfx
-}
-
-# Get the command-line arguments
-INIDATE=$1
-STARTDATE=$2
-STOPDATE=$3
+# Get the command-line arguments from environment variables
+INIDATE=$INIDATE
+STARTDATE=$STARTDATE
+STOPDATE=$STOPDATE
 
 if [ -z "$STOPDATE" ]; then
   STOPDATE=$STARTDATE
