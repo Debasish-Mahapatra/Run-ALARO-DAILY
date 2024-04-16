@@ -26,7 +26,7 @@ Modify the `config.sh` file according to your environment and requirements befor
 3. Submit the job script using the following command:
 
    ```bash
-   qsub alaro_surfex_job.sh INIDATE STARTDATE STOPDATE
+   qsub -v INIDATE=YYYYMMDD,STARTDATE=YYYYMMDD,STOPDATE=YYYYMMDD job-Alaro_daily.sh
 
 
 Replace INIDATE, STARTDATE, and STOPDATE with the appropriate values.
